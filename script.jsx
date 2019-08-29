@@ -16,7 +16,7 @@ class List extends React.Component {
         }
         this.setState(newState)
     }else{
-        this.state.list.push(this.state.word)
+        this.state.list.push([this.state.word,new Date()])
         let newState = {
             list:this.state.list,
             word:"",
@@ -61,7 +61,10 @@ class List extends React.Component {
                     <tbody>
                     {this.state.list.map((x,index)=>
                         <tr>
-                            <td className="first-column">{x}</td>
+                            <td className="first-column">{x[0]}</td>
+                            <td>
+                               {moment().format("MMM Do YY")}
+                            </td>
                             <td><button onClick={(e)=>{this.removeThis(e,index)}}>Delete</button></td>
                         </tr>)
                     }
