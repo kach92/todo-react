@@ -4,16 +4,45 @@ class List extends React.Component {
 
     this.state = {
       word:"",
-      list : []
+      list : [],
+      error : false
     }
   }
 
   addItem(){
-    debugger;
+    if(this.state.word<1 || this.state.word>200){
+        let newState = {
+            error:true
+        }
+        this.setState(newState)
+    }else{
+        this.state.list.push(this.state.word)
+        let newState = {
+            list:this.state.list,
+            word:"",
+            error:false
+        }
+        this.setState(newState)
+    }
+
   }
 
   changeHandler(){
-    debugger;
+        let temp = event.target.value
+        let newState = {
+            word:temp
+        }
+        this.setState(newState)
+  }
+
+  removeThis(e,index){
+        console.log(e)
+        console.log(index)
+        this.state.list.splice(index,1);
+        let newState = {
+            list:this.state.list
+        }
+        this.setState(newState)
   }
 
   render() {
@@ -21,9 +50,24 @@ class List extends React.Component {
 
       console.log("rendering");
       return (
-        <div className="list">
-          <input onChange={()=>{this.changeHandler()}} value={this.state.word}/>
-          <button onClick={()=>{this.addItem()}}>add item</button>
+        <div>
+            <div className="list">
+              <input onChange={(event)=>{this.changeHandler(event)}} value={this.state.word}/>
+              <button onClick={()=>{this.addItem()}}>add item</button><br/>
+              {this.state.error && <p className="warning">Your text must be more than 1 OR less than 200 characters!</p>}
+            </div>
+            <div>
+                <table>
+                    <tbody>
+                    {this.state.list.map((x,index)=>
+                        <tr>
+                            <td className="first-column">{x}</td>
+                            <td><button onClick={(e)=>{this.removeThis(e,index)}}>Delete</button></td>
+                        </tr>)
+                    }
+                    </tbody>
+                </table>
+            </div>
         </div>
       );
   }
