@@ -62,7 +62,7 @@ class List extends React.Component {
                     {this.state.list.map((x,index)=>
                         <tr>
                             <td className="first-column">{x[0]}</td>
-                            <td>
+                            <td className="second-column">
                                {moment().format("MMM Do YY")}
                             </td>
                             <td><button onClick={(e)=>{this.removeThis(e,index)}}>Delete</button></td>

@@ -3,5 +3,9 @@
 }
 
 .first-column{
-    width:100px;
+    min-width:100px;
+}
+
+.second-column{
+    min-width:100px;
 }
