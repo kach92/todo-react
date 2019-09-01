@@ -13,13 +13,47 @@ class Form extends React.Component {
 }
 
 class TodoItem extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.index = this.props.index;
+        this.state = {
+            timeLeft:5
+        }
+    }
+
+    componentDidMount() {
+        this.intervalID = setInterval(
+          () => this.tick(),
+          1000
+        );
+    }
+    componentWillUnmount() {
+        clearInterval(this.intervalID);
+    }
+
+    tick() {
+        if(this.state.timeLeft <1){
+            console.log(this.index)
+            this.props.removeByTime(this.index)
+        }else{
+            this.state.timeLeft--
+            this.setState({
+              timeLeft: this.state.timeLeft
+            });
+        }
+
+    }
+
     render(){
+
         return(
                 <tr>
                     <td className="first-column">{this.props.x[0]}</td>
                     <td className="second-column">
                        {moment(this.props.x[1]).fromNow()}
                     </td>
+                    <td>{this.state.timeLeft}s</td>
                     <td><button onClick={(e)=>{this.props.removeThis(e,this.props.index)}}>Delete</button></td>
                 </tr>
             )
@@ -30,7 +64,7 @@ class ItemList extends React.Component{
     render(){
 
         let items = this.props.list.map((x,index)=>{
-            return <TodoItem  x={x} index={index} removeThis={this.props.removeThis}/>
+            return <TodoItem  x={x} index={index} removeThis={this.props.removeThis} removeByTime={this.props.removeByTime}/>
 
         })
 
@@ -75,6 +109,7 @@ class TodoApp extends React.Component {
     this.changeHandler = this.changeHandler.bind(this);
     this.addItem = this.addItem.bind(this);
     this.removeThis = this.removeThis.bind(this);
+    this.removeByTime = this.removeByTime.bind(this);
   }
 
   addItem(event){
@@ -114,6 +149,17 @@ class TodoApp extends React.Component {
         this.setState(newState)
   }
 
+  removeByTime(index){
+        let deleted = this.state.list[index]
+        this.state.list.splice(index,1);
+        this.state.delete.push(deleted)
+        let newState = {
+            list:this.state.list,
+            delete: this.state.delete
+        }
+        this.setState(newState)
+  }
+
   render() {
       // render the list with a map() here
       console.log(this.state.delete)
@@ -122,7 +168,7 @@ class TodoApp extends React.Component {
 
             <div>
                 <Form changeHandler={this.changeHandler} addItem={this.addItem} word={this.state.word} error={this.state.error}/>
-                <ItemList list={this.state.list} removeThis={this.removeThis}/>
+                <ItemList list={this.state.list} removeThis={this.removeThis} removeByTime={this.removeByTime}/>
                 <DeletedItemList delete={this.state.delete}/>
             </div>
         </div>
